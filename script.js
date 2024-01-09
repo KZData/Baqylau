@@ -1,16 +1,14 @@
-// script.js
 document.addEventListener('DOMContentLoaded', () => {
-    // Function to convert CSV data to HTML table
-    function csvToTable(csvData) {
-        const rows = csvData.split('\n');
+    // Function to convert JSON data to HTML table
+    function jsonToTable(jsonData) {
+        const data = JSON.parse(jsonData);
         let tableHTML = '<table>';
 
-        rows.forEach(row => {
+        data.forEach(item => {
             tableHTML += '<tr>';
-            const columns = row.split(',');
 
-            columns.forEach(column => {
-                tableHTML += `<td>${column}</td>`;
+            Object.values(item).forEach(value => {
+                tableHTML += `<td>${value}</td>`;
             });
 
             tableHTML += '</tr>';
@@ -20,14 +18,14 @@ document.addEventListener('DOMContentLoaded', () => {
         return tableHTML;
     }
 
-    // Fetch the CSV file and display the data in HTML
-    fetch('Data/Transformed_MAIN.csv') // Adjust the path if needed
+    // Fetch the JSON file and display the data in HTML
+    fetch('Data/transformed.json') // Adjust the path if needed
         .then(response => response.text())
         .then(data => {
             const tableContainer = document.getElementById('table-container');
-            tableContainer.innerHTML = csvToTable(data);
+            tableContainer.innerHTML = jsonToTable(data);
         })
         .catch(error => {
-            console.error('Error fetching the CSV file:', error);
+            console.error('Error fetching the JSON file:', error);
         });
 });

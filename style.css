@@ -1,0 +1,30 @@
+/* Resetting default margin and padding */
+body,
+h1,
+h2,
+h3,
+p,
+ul,
+li {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0; /* Light color for body */
+    color: #9da1dd; /* Default text color */
+}
+
+header,
+footer {
+    background-color: #96bfea; /* Dark color for header and footer */
+    color: #fff; /* Light text color for header and footer */
+    padding: 20px;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+/* Add more styles as needed */

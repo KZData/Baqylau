@@ -1,3 +1,5 @@
+/* style.css */
+
 /* Resetting default margin and padding */
 body,
 h1,
@@ -5,7 +7,8 @@ h2,
 h3,
 p,
 ul,
-li {
+li,
+table {
     margin: 0;
     padding: 0;
 }
@@ -13,7 +16,7 @@ li {
 body {
     font-family: Arial, sans-serif;
     background-color: #f0f0f0; /* Light color for body */
-    color: #9da1dd; /* Default text color */
+    color: #333; /* Default text color */
 }
 
 header,
@@ -24,7 +27,22 @@ footer {
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 1.5em; /* Smaller font size for the header */
 }
 
-/* Add more styles as needed */
+table {
+    border-collapse: collapse;
+    width: 80%; /* Adjust the table width */
+    margin: 20px auto; /* Center the table */
+}
+
+table, th, td {
+    border: 1px solid #ddd; /* Border styling */
+    padding: 8px; /* Padding for cells */
+    text-align: left; /* Align text to the left */
+}
+
+th {
+    background-color: #4f657d; /* Header cell background color */
+    color: #fff; /* Header cell text color */
+}

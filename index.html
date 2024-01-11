@@ -75,6 +75,7 @@
     var y = [];
     var size = [];
     var text = [];
+    var color = ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'];
 
     // assuming 'Заказчик' is the x-axis, 'Запланированная Сумма' is the y-axis,
     // and the size of the bubble is proportional to 'Запланированная Сумма'
@@ -91,6 +92,7 @@
       y: y,
       mode: "markers",
       marker: {
+        color: color,
         size: size,
         sizemode: "area",
         sizeref: 2 * Math.max(...size) / (40 ** 2),
@@ -107,7 +109,9 @@
       yaxis: {
         title: "Запланированная Сумма"
       },
-      showlegend: false
+      showlegend: false,
+      height: 600,
+      width: 600
     };
 
     var config = {

@@ -3,7 +3,7 @@
     <style>
         * {
             margin: 0;
-            padding: 0;
+            padding: 10;
             box-sizing: border-box;
         }
 
@@ -27,11 +27,11 @@
 
         .main {
             min-height: calc(100vh - 160px);
-            padding: 20px;
+            padding: 00px;
         }
 
         .footer {
-            height: 80px;
+            height: 70px;
             background-color: #333333;
             display: flex;
             align-items: center;
@@ -45,7 +45,7 @@
 
         .bubble-plot {
             width: 800px;
-            height: 600px;
+            height: 500px;
             margin: 0 auto;
         }
     </style>
@@ -80,38 +80,42 @@
     // assuming 'Заказчик' is the x-axis, 'Запланированная Сумма' is the y-axis,
     // and the size of the bubble is proportional to 'Запланированная Сумма'
     for (var i = 0; i < jsonObj.length; i++) {
-      x.push(jsonObj[i]['Заказчик']);
-      y.push(jsonObj[i]['Запланированная Сумма']);
+      x.push(Math.random() * 10);  // assign a random initial x value
+      y.push(Math.random() * 10);  // assign a random initial y value
       size.push(jsonObj[i]['Запланированная Сумма']);
-      text.push("Заказчик: " + jsonObj[i]['Заказчик'] + "<br>Запланированная Сумма: " + jsonObj[i]['Запланированная Сумма']);
+      text.push((jsonObj[i]['Запланированная Сумма'] / 1000000).toFixed(2));
     }
+
 
     // Create the bubble plot
     var data = [{
       x: x,
       y: y,
-      mode: "markers",
+      mode: "markers+text",
       marker: {
         color: color,
         size: size,
         sizemode: "area",
-        sizeref: 2 * Math.max(...size) / (40 ** 2),
+        sizeref: 2 * Math.max(...size) / (40 ** 3),
         sizemin: 4
       },
-      text: text
+      text: text,
+      textposition: 'inside'
     }];
 
     var layout = {
-      title: "Bubble Plot with Moving Bubbles and User Filters",
+      title: "Топ 10 Атырауских гос учреждений по сумме запланированных Закупок (в млн) ",
       xaxis: {
-        title: "Заказчик"
+        title: " ",
+        showticklabels: false
       },
       yaxis: {
-        title: "Запланированная Сумма"
+        title: " ",
+        showticklabels: false
       },
       showlegend: false,
-      height: 600,
-      width: 600
+      height: 700,
+      width: 800
     };
 
     var config = {
@@ -121,6 +125,34 @@
     Plotly.newPlot("bubble-plot", data, layout, config);
   })
   .catch(error => console.error('Error:', error));
+
+    // Start the movement after the initial plot
+  setTimeout(startInterval, 10);
+
+  // Function to start the interval
+  function startInterval() {
+    setInterval(updatePlot, 1);
+  }
+
+  // Function to update the plot
+// Function to update the plot
+  function updatePlot() {
+    // Update the 'x' and 'y' values with random numbers
+    for (var i = 0; i < x.length; i++) {
+      x[i] = Math.random() * 10;
+      y[i] = Math.random() * 10;
+    }
+
+    // Update the plot with the new data
+    Plotly.update('bubble-plot', {
+      x: [x],
+      y: [y]
+    }, {}, [0]);  // The [0] at the end specifies the index of the trace to update
+  }
+
+
     </script>
+
+    
 </body>
 </html>

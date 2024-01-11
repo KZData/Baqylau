@@ -123,6 +123,13 @@
     };
 
     Plotly.newPlot("bubble-plot", data, layout, config);
+
+    // Add click event to the bubbles
+    document.getElementById('bubble-plot').on('plotly_click', function(data){
+        var index = data.points[0].pointNumber;
+        alert('Заказчик: ' + jsonObj[index]['Заказчик'] + ', Запланированная сумма: ' + jsonObj[index]['Запланированная Сумма']);
+    });
+
   })
   .catch(error => console.error('Error:', error));
 
@@ -135,7 +142,6 @@
   }
 
   // Function to update the plot
-// Function to update the plot
   function updatePlot() {
     // Update the 'x' and 'y' values with random numbers
     for (var i = 0; i < x.length; i++) {
@@ -147,12 +153,8 @@
     Plotly.update('bubble-plot', {
       x: [x],
       y: [y]
-    }, {}, [0]);  // The [0] at the end specifies the index of the trace to update
+    }, {}, [0]);
   }
-
-
     </script>
-
-    
 </body>
 </html>

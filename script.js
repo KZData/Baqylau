@@ -1,63 +1,146 @@
-// import the fs and Plotly modules
-const fs = require("fs");
-const Plotly = require('plotly.js-dist');
+document.addEventListener("DOMContentLoaded", function () {
+  // Fetch data and create bar chart
+  fetch("https://raw.githubusercontent.com/KZData/Baqylau/main/Data/Top10Customer.json")
+      .then(response => response.json())
+      .then(jsonData => {
+          const jsonObj = jsonData;
 
-// read the JSON file
-fs.readFile("Data/Top10Customer.json", "utf8", (err, data) => {
-  // handle any errors
-  if (err) {
-    console.error(err);
-    return;
-  }
-  // parse the JSON data
-  const jsonData = JSON.parse(data);
+          var trace = {
+              x: jsonObj.map(item => (item['Запланированная Сумма'] / 1000000).toFixed(2)),
+              y: jsonObj.map(item => item['Заказчик']),
+              orientation: 'h',
+              type: 'bar',
+              marker: {
+                  color: 'rgba(55,128,191,0.6)',
+                  width: 1
+              },
+              text: jsonObj.map(item => (item['Запланированная Сумма'] / 1000000).toFixed(2) + ' млн'),
+              textposition: 'outside'
+          };
 
-  // get the JSON object
-  const jsonObj = jsonData; // assuming you want the first object in the array
+          var data = [trace];
 
-  // prepare the data for the bubble plot
-  var x = [];
-  var y = [];
-  var size = [];
-  var text = [];
+          var layout = {
+              title: 'Top 10 Атырауских гос учреждений по сумме запланированных Закупок (в млн)',
+              xaxis: {
+                  title: 'Запланированная сумма (млн)',
+                  showticklabels: false,
+              },
+              yaxis: {
+                  tickangle: -45
+              },
+              barmode: 'stack'
+          };
 
-  // assuming 'Заказчик' is the x-axis, 'Запланированная Сумма' is the y-axis,
-  // and the size of the bubble is proportional to 'Запланированная Сумма'
-  for (var i = 0; i < jsonObj.length; i++) {
-    x.push(jsonObj[i]['Заказчик']);
-    y.push(jsonObj[i]['Запланированная Сумма']);
-    size.push(jsonObj[i]['Запланированная Сумма']);
-    text.push("Заказчик: " + jsonObj[i]['Заказчик'] + "<br>Запланированная Сумма: " + jsonObj[i]['Запланированная Сумма']);
-  }
+          var config = {
+              responsive: true
+          };
 
-  // Create the bubble plot
-  var data = [{
-    x: x,
-    y: y,
-    mode: "markers",
-    marker: {
-      size: size,
-      sizemode: "area",
-      sizeref: 2 * Math.max(...size) / (40 ** 2),
-      sizemin: 4
-    },
-    text: text
-  }];
+          Plotly.newPlot("bar-plot", data, layout, config);
 
-  var layout = {
-    title: "Bubble Plot with Moving Bubbles and User Filters",
-    xaxis: {
-      title: "Заказчик"
-    },
-    yaxis: {
-      title: "Запланированная Сумма"
-    },
-    showlegend: false
-  };
+          document.getElementById('bar-plot').on('plotly_click', function (data) {
+              var index = data.points[0].pointNumber;
+              alert('Заказчик: ' + jsonObj[index]['Заказчик'] + ', Запланированная сумма: ' + jsonObj[index]['Запланированная Сумма']);
+          });
 
-  var config = {
-    responsive: true
-  };
+      })
+      .catch(error => console.error('Error:', error));
 
-  Plotly.newPlot("bubble-plot", data, layout, config);
+  // Create search table
+  createSearchTable();
 });
+
+function createSearchTable() {
+  const container = document.getElementById('table-container');
+
+  const html = `
+      <label for="column">Select Column:</label>
+      <select id="column">
+          <option value="LotNo">Lot Number</option>
+          <option value="LotTitle">Lot Title</option>
+          <option value="LotRequestor">Lot Requestor</option>
+          <option value="Customers">Customers</option>
+          <!-- Add more options based on your JSON structure -->
+      </select>
+
+      <br>
+
+      <label for="searchText">Search Text:</label>
+      <input type="text" id="searchText">
+
+      <br>
+
+      <button onclick="searchData()">Search</button>
+
+      <br>
+
+      <table id="searchTable">
+          <!-- Table content will be dynamically added here -->
+      </table>
+  `;
+
+  container.innerHTML = html;
+}
+
+function searchData() {
+  const column = document.getElementById('column').value;
+  const searchText = document.getElementById('searchText').value.toLowerCase();
+
+  fetch("https://raw.githubusercontent.com/KZData/Baqylau/main/Data/transformed.json")
+      .then(response => response.json())
+      .then(jsonData => {
+          const filteredData = jsonData.filter(item => item[column].toLowerCase().includes(searchText));
+          displaySearchResults(filteredData);
+      })
+      .catch(error => console.error('Error:', error));
+}
+
+function displaySearchResults(data) {
+  const table = document.getElementById('searchTable');
+
+  // Clear previous table content
+  table.innerHTML = '';
+
+  if (data.length === 0) {
+      // Display a message when no results are found
+      const noResultsRow = document.createElement('tr');
+      const noResultsCell = document.createElement('td');
+      noResultsCell.textContent = 'No results found';
+      noResultsCell.colSpan = 999; // Set a large colspan to span the entire row
+      noResultsRow.appendChild(noResultsCell);
+      table.appendChild(noResultsRow);
+      return;
+  }
+
+  const columns = Object.keys(data[0]);
+
+  // Create table header
+  const thead = document.createElement('thead');
+  const headerRow = document.createElement('tr');
+
+  columns.forEach(column => {
+      const th = document.createElement('th');
+      th.textContent = column;
+      headerRow.appendChild(th);
+  });
+
+  thead.appendChild(headerRow);
+  table.appendChild(thead);
+
+  // Create table body
+  const tbody = document.createElement('tbody');
+
+  data.forEach(item => {
+      const row = document.createElement('tr');
+
+      columns.forEach(column => {
+          const td = document.createElement('td');
+          td.textContent = item[column];
+          row.appendChild(td);
+      });
+
+      tbody.appendChild(row);
+  });
+
+  table.appendChild(tbody);
+}

@@ -1,160 +1,20 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <style>
-        * {
-            margin: 0;
-            padding: 10;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Roboto, sans-serif;
-            background-color: #f0f0f0;
-        }
-
-        .header {
-            height: 80px;
-            background-color: #333333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header h1 {
-            color: white;
-            font-size: 36px;
-        }
-
-        .main {
-            min-height: calc(100vh - 160px);
-            padding: 00px;
-        }
-
-        .footer {
-            height: 70px;
-            background-color: #333333;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .footer p {
-            color: white;
-            font-size: 18px;
-        }
-
-        .bubble-plot {
-            width: 800px;
-            height: 500px;
-            margin: 0 auto;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
     <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+    <script src="script.js"></script>
 </head>
 <body>
     <div class="header">
         <h1>Baqylau</h1>
     </div>
     <div class="main">
-        <div class="bubble-plot" id="bubble-plot"></div>
+        <div class="bar-plot" id="bar-plot"></div>
+        <div id="table-container"></div>
     </div>
     <div class="footer">
         <p>© 2024 Baqylau. All rights reserved.</p>
     </div>
-    
-    <script>
-       // Fetch the JSON data from the server
-    fetch("https://raw.githubusercontent.com/KZData/Baqylau/main/Data/Top10Customer.json")
-    .then(response => response.json())
-    .then(jsonData => {
-    // get the JSON object
-    const jsonObj = jsonData; // assuming you want the first object in the array
-
-    // prepare the data for the bubble plot
-    var x = [];
-    var y = [];
-    var size = [];
-    var text = [];
-    var color = ['rgb(93, 164, 214)', 'rgb(255, 144, 14)',  'rgb(44, 160, 101)', 'rgb(255, 65, 54)'];
-
-    // assuming 'Заказчик' is the x-axis, 'Запланированная Сумма' is the y-axis,
-    // and the size of the bubble is proportional to 'Запланированная Сумма'
-    for (var i = 0; i < jsonObj.length; i++) {
-      x.push(Math.random() * 10);  // assign a random initial x value
-      y.push(Math.random() * 10);  // assign a random initial y value
-      size.push(jsonObj[i]['Запланированная Сумма']);
-      text.push((jsonObj[i]['Запланированная Сумма'] / 1000000).toFixed(2));
-    }
-
-
-    // Create the bubble plot
-    var data = [{
-      x: x,
-      y: y,
-      mode: "markers+text",
-      marker: {
-        color: color,
-        size: size,
-        sizemode: "area",
-        sizeref: 2 * Math.max(...size) / (40 ** 3),
-        sizemin: 4
-      },
-      text: text,
-      textposition: 'inside'
-    }];
-
-    var layout = {
-      title: "Топ 10 Атырауских гос учреждений по сумме запланированных Закупок (в млн) ",
-      xaxis: {
-        title: " ",
-        showticklabels: false
-      },
-      yaxis: {
-        title: " ",
-        showticklabels: false
-      },
-      showlegend: false,
-      height: 700,
-      width: 800
-    };
-
-    var config = {
-      responsive: true
-    };
-
-    Plotly.newPlot("bubble-plot", data, layout, config);
-
-    // Add click event to the bubbles
-    document.getElementById('bubble-plot').on('plotly_click', function(data){
-        var index = data.points[0].pointNumber;
-        alert('Заказчик: ' + jsonObj[index]['Заказчик'] + ', Запланированная сумма: ' + jsonObj[index]['Запланированная Сумма']);
-    });
-
-  })
-  .catch(error => console.error('Error:', error));
-
-    // Start the movement after the initial plot
-  setTimeout(startInterval, 10);
-
-  // Function to start the interval
-  function startInterval() {
-    setInterval(updatePlot, 1);
-  }
-
-  // Function to update the plot
-  function updatePlot() {
-    // Update the 'x' and 'y' values with random numbers
-    for (var i = 0; i < x.length; i++) {
-      x[i] = Math.random() * 10;
-      y[i] = Math.random() * 10;
-    }
-
-    // Update the plot with the new data
-    Plotly.update('bubble-plot', {
-      x: [x],
-      y: [y]
-    }, {}, [0]);
-  }
-    </script>
 </body>
 </html>

@@ -1,14 +1,14 @@
 body {
     font-family: 'Roboto', sans-serif;
-    background-color: #f4f4f4;
+    background-color: #FFFFFF;
     color: #333;
     margin: 0;
     padding: 0;
 }
 
 .header {
-    height: 80px;
-    background-color: #4285f4;
+    height: 100px;
+    background-color: #146366;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -16,7 +16,12 @@ body {
 }
 
 .header h1 {
-    font-size: 28px;
+    font-size: 40px;
+}
+
+.header h5 {
+    font-size: 12px;
+
 }
 
 .main {
@@ -26,7 +31,7 @@ body {
 
 .footer {
     height: 70px;
-    background-color: #333333;
+    background-color: #146366;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -38,8 +43,11 @@ body {
 }
 
 .bar-plot {
-    width: 100%;
+    width: 50%;
     height: 400px;
+    margin-left: 100px;
+    text-align: center;
+    align-content: flex-start;
 }
 
 table {
@@ -55,9 +63,9 @@ th, td {
 }
 
 th {
-    font-weight: bold;
+    font-weight: normal;
     font-size: 18px;
-    background-color: #4285f4;
+    background-color: #3D9699;
     color: #ffffff;
 }
 
@@ -74,12 +82,12 @@ input {
 
 button {
     padding: 12px;
-    background-color: #4285f4;
+    background-color: #3D9699;
     color: #ffffff;
     border: none;
     cursor: pointer;
 }
 
 button:hover {
-    background-color: #357ae8;
+    background-color: #003638;
 }
